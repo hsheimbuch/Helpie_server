@@ -11,4 +11,25 @@ def upload_photo():
     )
     print(response.json())
     
-upload_photo()
+def upload_location():
+    location = "DE"
+    response = requests.post(
+        'http://127.0.0.1:8000/location',
+        data={"location":location},
+    )
+    print(response.json())
+    
+def upload_questionaire():
+    first_answer = 1
+    second_answer = 2
+    response = requests.post(
+        'http://127.0.0.1:8000/questionaire',
+        data={"first_answer":first_answer,"second_answer":second_answer},
+    )
+    print(response.json())
+    
+#upload_photo()
+
+#upload_location()
+
+upload_questionaire()

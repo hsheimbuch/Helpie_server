@@ -1,10 +1,10 @@
-from fastapi import FastAPI, File, UploadFile, Form
-from pydantic import BaseModel
+from fastapi import FastAPI, File, UploadFile, Request, Form
 import cv2
 from PIL import Image
 import numpy as np
 import tensorflow as tf
 import os
+import csv
 
 # Create array with emotion names
 class_names = ["Angry", "Disgust", "Fear", "Happy", "Sad", "Surprise", "Neutral"]
@@ -73,7 +73,6 @@ def read_root():
 
 @app.post("/analyze")
 def get_image(file: UploadFile = File(...)):
-    print('a')
     image = np.array(Image.open(file.file))
     face, face_coordinates = detect_face(image,cascade)
     if face is not None:
@@ -83,3 +82,12 @@ def get_image(file: UploadFile = File(...)):
         class_name = None
     #image = np.array(Image.open(file.file))
     return {"emotion": class_name}
+
+@app.post("/location")
+def get_location(location: str = Form(...)):
+    return {"location": location}
+
+@app.post("/questionaire")
+def get_questionaire(first_answer: int = Form(...),
+        second_answer: int = Form(...)):
+    return {"1": first_answer, "2": second_answer}
