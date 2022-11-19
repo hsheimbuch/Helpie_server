@@ -114,4 +114,57 @@ def get_location(location: str = Form(...)):
 
 @app.post('/result')
 def get_result(result: int = Form(...)):
-    return {'result': 'some big text'}
+    return {'emotion': 'Worry',
+            'description': 'Practice to help you calm \
+down in a stressful situation',
+            'time': '5',
+            '1': 'During this exercise, \
+you will observe the work of your consciousness,\
+imagining that it is a white room through which thoughts pass.\
+You can perform it in any quiet place, sitting or lying down.\
+Close your eyes and take a few deep breaths.\
+Breathe slowly and evenly throughout the exercise.',
+            '2': 'Imagine that you are in a medium-sized white room \
+with two doors. Thoughts enter through one door and \
+leave through another. As soon as a thought appears, \
+concentrate on it and try to categorize it as evaluative \
+or non-evaluative (Example of an evaluative thought: \
+“I will look stupid at tomorrow’s performance, they \
+will laugh at me” / Example of a non-judgmental one: \
+“I am afraid of tomorrow’s performance, how can I \
+anxious .. ”note by the author of the channel)',
+            '3': 'Consider each thought carefully, with curiosity \
+and compassion until it goes away. Don’t try to analyze it, \
+just note if it’s evaluative or not. Don’t challenge it, don’t \
+try to believe or disbelieve in it. Just be aware that this is \
+a thought, a brief moment of your brain activity, an \
+occasional visitor to your white room.',
+            '4': 'Beware of thoughts that you have classified as evaluative. \
+They will try to take possession of you, to force you to \
+accept the assessment. The point of this exercise is to \
+notice how “sticky” judgmental thoughts are—how they get \
+stuck in your mind and how difficult it is to get rid of them. \
+You will determine that a thought is painful and judgmental by \
+how long it stays in the white room, or by whether you begin \
+to feel any emotion about it.',
+            '5': 'Try to constantly maintain even breathing, keep a clear \
+image of the room and doors, follow thoughts and classify \
+them. Remember that a thought is just a thought. \
+You are much bigger than her. You are the one who \
+creates the white room through which thoughts are allowed \
+to pass. You have a million of them, they leave, but you \
+still remain. Thought does not require any action from you.\
+A thought does not oblige you to believe in it. \
+Thought is not you.',
+            '6': 'Just watch them walk through the white room.\
+Let them live their short life and tell yourself that they \
+have a right to exist, even estimated ones.',
+            '7': ' Just acknowledge your thoughts, let them go when the time \
+comes, and get ready to meet new ones one by one. Keep doing \
+this exercise until you feel that you have truly distanced \
+yourself from your thoughts.  Do it until even evaluative \
+thoughts begin to pass through the room without lingering. \
+P.S.  Instead of the image of a room with 2 doors, you can \
+take an image that is closer to you: for example, a funicular \
+that transfers thoughts or a baggage belt at an airport, etc.'
+            }
