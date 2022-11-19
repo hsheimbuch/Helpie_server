@@ -1,0 +1,14 @@
+name: helpie
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.8
+  - opencv
+  - pillow
+  - fastapi
+  - python-multipart
+  - pip:
+    - -r requirements.txt
+prefix: //anaconda2/envs/helpie
+
