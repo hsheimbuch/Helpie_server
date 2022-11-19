@@ -5,18 +5,40 @@ import numpy as np
 import tensorflow as tf
 import os
 import csv
-
-# Create array with emotion names
-class_names = ["Angry", "Disgust", "Fear", "Happy", "Sad", "Surprise", "Neutral"]
+import shlex
 
 # Change working dir to script location
 abspath = os.path.abspath(__file__)
 dname = os.path.dirname(abspath)
 os.chdir(dname)
 
+# Create array with emotion names
+emotion_names = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
+extended_emotion_names = ['Worry', 'Anxiety', 'Panic', 'Melancholy', 'Sadness',
+                          'Grief', 'Annoyance', 'Anger', 'Rage', 'Shame', 'Guilt', 
+                          'Disgust', 'Neutral', 'Surprised', 'Happy']
+
 # Initialise Haar cascade and TF model
 cascade = cv2.CascadeClassifier("haarcascade_frontalface_alt.xml")
 model = tf.keras.models.load_model("model.h5")
+
+# Function to init countries
+def init_countries(countries_file):
+    countires_dict = {}
+    with open(countries_file, newline='') as csvfile:
+        spamreader = csv.DictReader(csvfile)
+        for row in spamreader:
+            countires_dict[row['Country code']] = row['Organisations'].split('|')
+            for entry_index, entry in \
+    enumerate(countires_dict[row['Country code']]):
+                countires_dict[row['Country code']][entry_index] = \
+    shlex.split(entry[1:-1].replace(',','').replace('[','').replace(']','')\
+    .replace('Ukrainian Russian speakers','Ukrainians, Russian speakers'))
+    return countires_dict
+
+# Init countries
+countries_file = 'countires.csv'
+countries_dict = init_countries(countries_file)
 
 # Function to detect emotions using sliced face image 
 # and TF model in .h5 format
@@ -49,7 +71,7 @@ def detect_face(frame, cascade):
     largest_face_coordinates = None
     
     if len(faces_coordinates) == 0:
-        print("No face detected!")
+        print('No face detected!')
         return face, (0,0,0,0)
     
     for (x, y, w, h) in faces_coordinates:
@@ -66,28 +88,30 @@ def detect_face(frame, cascade):
 
 app = FastAPI()
 
-@app.get("/")
+@app.get('/')
 def read_root():
-    return {"message": "Welcome from the API"}
+    return {'message': 'Welcome from the API'}
 
+@app.post('/test')
+def test_api(message: str = Form(...)):
+    return {'Hello World': message}
 
-@app.post("/analyze")
+@app.post('/analyze')
 def get_image(file: UploadFile = File(...)):
     image = np.array(Image.open(file.file))
     face, face_coordinates = detect_face(image,cascade)
     if face is not None:
         idx, num = detect_emotion(preprocess(face),model)
-        class_name = class_names[idx]
+        class_name = emotion_names[idx]
     else:
         class_name = None
     #image = np.array(Image.open(file.file))
-    return {"emotion": class_name}
+    return {'emotion': class_name}
 
-@app.post("/location")
+@app.post('/location')
 def get_location(location: str = Form(...)):
-    return {"location": location}
+    return {'location': countries_dict[location]}
 
-@app.post("/questionaire")
-def get_questionaire(first_answer: int = Form(...),
-        second_answer: int = Form(...)):
-    return {"1": first_answer, "2": second_answer}
+@app.post('/result')
+def get_result(result: int = Form(...)):
+    return {'result': 'some big text'}
