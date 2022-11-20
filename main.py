@@ -137,5 +137,5 @@ def return_result(cards_file_path, emotion_number):
 @app.get('/result')
 async def get_result(result: int = 0):
     cards = {'cards':return_result(cards_file_path, result)}
-    return_dict = {{'emotion': result},cards}
+    return_dict = [{'emotion': result},cards]
     return return_dict
