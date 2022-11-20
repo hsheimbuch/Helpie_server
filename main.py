@@ -99,14 +99,14 @@ async def test_api(message: str = Form(...)):
     return {'Hello World': message}
 
 @app.get('/analyze')
-async def get_image(file: str = "https%3A%2F%2Ffirebasestorage.googleapis.com%2Fv0%2Fb%2Fhelpie-fbe77.appspot.com%2Fo%2Fimages%252Fexternal%252Fimages%252Fmedia%252F1000002426.jpg%3Falt%3Dmedia%26token%3D71438dc4-96f9-4f00-a15f-0b21b63814c8"):
+async def get_image(file: str = "https://firebasestorage.googleapis.com/v0/b/helpie-fbe77.appspot.com/o/images%2Fexternal%2Fimages%2Fmedia%2F1000002429.jpg?alt=media&token=0c209923-f2f2-4a8e-87ef-b687d3231602"):
     response = requests.get(file)
     image = np.array(Image.open(BytesIO(response.content)))
     face, face_coordinates = detect_face(image,cascade)
     if face is not None:
         idx, num = detect_emotion(preprocess(face),model)
         emotion_number = idx
-    else:
+    elif face is None:
         emotion_number = 7
     #image = np.array(Image.open(file.file))
     return {'emotion': emotion_number}
@@ -117,77 +117,25 @@ async def get_location(location: str = "DE"):
 
 cards_file_path = 'file.csv'
 
-def return_result(cards_file_path):
+def return_result(cards_file_path, emotion_number):
     result = {}
     with open(cards_file_path, newline='') as csvfile:
         reader = csv.reader(csvfile)
-        for row in reader:
-            result['emotion'] = row[1]
-            result['description'] = row[2]
-            result['time'] = row[3]
-            for index, card in enumerate(row[4:]):
-                if len(card) > 1:
-                    result[str(index+1)] = card
+        for id, row in enumerate(reader):
+            if id == emotion_number:
+                result['title'] = row[2]
+                result['description'] = ''
+                for index, card in enumerate(row[4:]):
+                    if len(card) > 1:
+                        result['description'] += card
                 
-    print(result)
+    return result
             
         
-return_result(cards_file_path)
+#return_result(cards_file_path, 0)
 
 @app.get('/result')
 async def get_result(result: int = 0):
-    return {'emotion': 'Worry',
-            'description': 'Practice to help you calm \
-down in a stressful situation',
-            'time': '5',
-            'cards':{
-            '1': 'During this exercise, \
-you will observe the work of your consciousness,\
-imagining that it is a white room through which thoughts pass.\
-You can perform it in any quiet place, sitting or lying down.\
-Close your eyes and take a few deep breaths.\
-Breathe slowly and evenly throughout the exercise.',
-            '2': 'Imagine that you are in a medium-sized white room \
-with two doors. Thoughts enter through one door and \
-leave through another. As soon as a thought appears, \
-concentrate on it and try to categorize it as evaluative \
-or non-evaluative (Example of an evaluative thought: \
-“I will look stupid at tomorrow’s performance, they \
-will laugh at me” / Example of a non-judgmental one: \
-“I am afraid of tomorrow’s performance, how can I \
-anxious .. ”note by the author of the channel)',
-            '3': 'Consider each thought carefully, with curiosity \
-and compassion until it goes away. Don’t try to analyze it, \
-just note if it’s evaluative or not. Don’t challenge it, don’t \
-try to believe or disbelieve in it. Just be aware that this is \
-a thought, a brief moment of your brain activity, an \
-occasional visitor to your white room.',
-            '4': 'Beware of thoughts that you have classified as evaluative. \
-They will try to take possession of you, to force you to \
-accept the assessment. The point of this exercise is to \
-notice how “sticky” judgmental thoughts are—how they get \
-stuck in your mind and how difficult it is to get rid of them. \
-You will determine that a thought is painful and judgmental by \
-how long it stays in the white room, or by whether you begin \
-to feel any emotion about it.',
-            '5': 'Try to constantly maintain even breathing, keep a clear \
-image of the room and doors, follow thoughts and classify \
-them. Remember that a thought is just a thought. \
-You are much bigger than her. You are the one who \
-creates the white room through which thoughts are allowed \
-to pass. You have a million of them, they leave, but you \
-still remain. Thought does not require any action from you.\
-A thought does not oblige you to believe in it. \
-Thought is not you.',
-            '6': 'Just watch them walk through the white room.\
-Let them live their short life and tell yourself that they \
-have a right to exist, even estimated ones.',
-            '7': ' Just acknowledge your thoughts, let them go when the time \
-comes, and get ready to meet new ones one by one. Keep doing \
-this exercise until you feel that you have truly distanced \
-yourself from your thoughts.  Do it until even evaluative \
-thoughts begin to pass through the room without lingering. \
-P.S.  Instead of the image of a room with 2 doors, you can \
-take an image that is closer to you: for example, a funicular \
-that transfers thoughts or a baggage belt at an airport, etc.'
-            }}
+    cards = {'cards':return_result(cards_file_path, result)}
+    return_dict = {{'emotion': result},cards}
+    return return_dict
