@@ -22,12 +22,12 @@ def upload_location():
     location = "DE"
     response = requests.post(
         'http://127.0.0.1:8000/location',
-        data={"location":location},
+        data="DE",
     )
     print(response.json())
     
 def upload_result():
-    result = 11
+    result = 0
     response = requests.post(
         'http://127.0.0.1:8000/result',
         data={"result":result},
@@ -36,8 +36,8 @@ def upload_result():
     
 #upload_photo()
 
-#upload_location()
+upload_location()
 
-upload_result()
+#upload_result()
 
 #test_api('LOL')

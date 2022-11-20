@@ -26,8 +26,8 @@ model = tf.keras.models.load_model("model.h5")
 def init_countries(countries_file):
     countires_dict = {}
     with open(countries_file, newline='') as csvfile:
-        spamreader = csv.DictReader(csvfile)
-        for row in spamreader:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
             countires_dict[row['Country code']] = row['Organisations'].split('|')
             for entry_index, entry in \
     enumerate(countires_dict[row['Country code']]):
@@ -108,9 +108,20 @@ def get_image(file: UploadFile = File(...)):
     #image = np.array(Image.open(file.file))
     return {'emotion': emotion_number}
 
-@app.post('/location')
-def get_location(location: str = Form(...)):
+@app.get('/location')
+async def get_location(location: str = "DE"):
     return {'location': countries_dict[location]}
+
+cards_file_path = 'cards.csv'
+
+def return_result(cards_file_path):
+    result = {}
+    with open(cards_file_path, newline='') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            print(row)
+        
+#return_result(cards_file_path)
 
 @app.post('/result')
 def get_result(result: int = Form(...)):
