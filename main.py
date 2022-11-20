@@ -123,8 +123,8 @@ def return_result(cards_file_path):
         
 #return_result(cards_file_path)
 
-@app.post('/result')
-def get_result(result: int = Form(...)):
+@app.get('/result')
+async def get_result(result: int = 0):
     return {'emotion': 'Worry',
             'description': 'Practice to help you calm \
 down in a stressful situation',
