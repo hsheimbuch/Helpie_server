@@ -4,4 +4,4 @@ conda env create --name <env name> --file=environment.yml (run from the director
 
 Deploy server:
 
-uvicorn main:app --reload (run from the directory)
+uvicorn main:app --reload (run from the directory under the condo environment)

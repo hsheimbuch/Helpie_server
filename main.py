@@ -118,6 +118,7 @@ def get_result(result: int = Form(...)):
             'description': 'Practice to help you calm \
 down in a stressful situation',
             'time': '5',
+            'cards':{
             '1': 'During this exercise, \
 you will observe the work of your consciousness,\
 imagining that it is a white room through which thoughts pass.\
@@ -167,4 +168,4 @@ thoughts begin to pass through the room without lingering. \
 P.S.  Instead of the image of a room with 2 doors, you can \
 take an image that is closer to you: for example, a funicular \
 that transfers thoughts or a baggage belt at an airport, etc.'
-            }
+            }}

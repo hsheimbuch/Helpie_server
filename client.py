@@ -36,8 +36,8 @@ def upload_result():
     
 #upload_photo()
 
-upload_location()
+#upload_location()
 
-#upload_result()
+upload_result()
 
 #test_api('LOL')
