@@ -6,7 +6,8 @@ import tensorflow as tf
 import os
 import csv
 import shlex
-import io
+from io import BytesIO
+import requests
 
 # Change working dir to script location
 abspath = os.path.abspath(__file__)
@@ -99,7 +100,8 @@ async def test_api(message: str = Form(...)):
 
 @app.get('/analyze')
 async def get_image(file: str = Form(...)):
-    image = np.array(Image.open(io.BytesIO(file)))
+    response = requests.get(file)
+    image = np.array(Image.open(BytesIO(response.content)))
     face, face_coordinates = detect_face(image,cascade)
     if face is not None:
         idx, num = detect_emotion(preprocess(face),model)
@@ -130,7 +132,7 @@ def return_result(cards_file_path):
     print(result)
             
         
-#return_result(cards_file_path)
+return_result(cards_file_path)
 
 @app.get('/result')
 async def get_result(result: int = 0):
