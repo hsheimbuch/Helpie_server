@@ -6,6 +6,7 @@ import tensorflow as tf
 import os
 import csv
 import shlex
+import io
 
 # Change working dir to script location
 abspath = os.path.abspath(__file__)
@@ -92,13 +93,13 @@ app = FastAPI()
 def read_root():
     return {'message': 'Welcome from the API'}
 
-@app.post('/test')
-def test_api(message: str = Form(...)):
+@app.get('/test')
+async def test_api(message: str = Form(...)):
     return {'Hello World': message}
 
-@app.post('/analyze')
-def get_image(file: UploadFile = File(...)):
-    image = np.array(Image.open(file.file))
+@app.get('/analyze')
+async def get_image(file: str = Form(...)):
+    image = np.array(Image.open(io.BytesIO(file)))
     face, face_coordinates = detect_face(image,cascade)
     if face is not None:
         idx, num = detect_emotion(preprocess(face),model)
@@ -112,14 +113,22 @@ def get_image(file: UploadFile = File(...)):
 async def get_location(location: str = "DE"):
     return {'location': countries_dict[location]}
 
-cards_file_path = 'cards.csv'
+cards_file_path = 'file.csv'
 
 def return_result(cards_file_path):
     result = {}
     with open(cards_file_path, newline='') as csvfile:
-        reader = csv.DictReader(csvfile)
+        reader = csv.reader(csvfile)
         for row in reader:
-            print(row)
+            result['emotion'] = row[1]
+            result['description'] = row[2]
+            result['time'] = row[3]
+            for index, card in enumerate(row[4:]):
+                if len(card) > 1:
+                    result[str(index+1)] = card
+                
+    print(result)
+            
         
 #return_result(cards_file_path)
 
