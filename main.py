@@ -115,7 +115,7 @@ async def get_image(file: str = "https://firebasestorage.googleapis.com/v0/b/hel
 async def get_location(location: str = "DE"):
     return {'location': countries_dict[location]}
 
-cards_file_path = 'file.csv'
+cards_file_path = 'cards.csv'
 
 def return_result(cards_file_path, emotion_number):
     result = {}
@@ -136,6 +136,6 @@ def return_result(cards_file_path, emotion_number):
 
 @app.get('/result')
 async def get_result(result: int = 0):
-    title, cards = {'cards':return_result(cards_file_path, result)}
+    title, cards = return_result(cards_file_path, result)
     return_dict = {'emotion': result,'title':title,'cards':cards}
     return return_dict
