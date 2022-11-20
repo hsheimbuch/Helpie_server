@@ -68,7 +68,7 @@ def detect_face(frame, cascade):
     
     face = None
 
-    faces_coordinates = cascade.detectMultiScale(frame, 1.1, 10)
+    faces_coordinates = cascade.detectMultiScale(frame, 1.1, 8)
     
     largest_face_coordinates = None
     
