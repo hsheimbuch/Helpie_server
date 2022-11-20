@@ -33,7 +33,7 @@ def init_countries(countries_file):
     enumerate(countires_dict[row['Country code']]):
                 countires_dict[row['Country code']][entry_index] = \
     shlex.split(entry[1:-1].replace(',','').replace('[','').replace(']','')\
-    .replace('Ukrainian Russian speakers','Ukrainians, Russian speakers'))
+    .replace('Ukrainians Russian speakers','Ukrainians, Russian speakers'))
     return countires_dict
 
 # Init countries
@@ -102,11 +102,11 @@ def get_image(file: UploadFile = File(...)):
     face, face_coordinates = detect_face(image,cascade)
     if face is not None:
         idx, num = detect_emotion(preprocess(face),model)
-        class_name = emotion_names[idx]
+        emotion_number = idx
     else:
-        class_name = None
+        emotion_number = 7
     #image = np.array(Image.open(file.file))
-    return {'emotion': class_name}
+    return {'emotion': emotion_number}
 
 @app.post('/location')
 def get_location(location: str = Form(...)):
@@ -131,7 +131,7 @@ concentrate on it and try to categorize it as evaluative \
 or non-evaluative (Example of an evaluative thought: \
 “I will look stupid at tomorrow’s performance, they \
 will laugh at me” / Example of a non-judgmental one: \
-“I am afraid of tomorrow’s performance, how can I \
+“I am afraid of tomorrow’s performance, how can I \
 anxious .. ”note by the author of the channel)',
             '3': 'Consider each thought carefully, with curiosity \
 and compassion until it goes away. Don’t try to analyze it, \
