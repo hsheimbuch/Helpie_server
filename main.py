@@ -123,19 +123,19 @@ def return_result(cards_file_path, emotion_number):
         reader = csv.reader(csvfile)
         for id, row in enumerate(reader):
             if id == emotion_number:
-                result['title'] = row[2]
-                result['description'] = ''
+                title = row[2]
+                cards = []
                 for index, card in enumerate(row[4:]):
                     if len(card) > 1:
-                        result['description'] += card
+                        cards.append(card)
                 
-    return result
+    return title, cards
             
         
 #return_result(cards_file_path, 0)
 
 @app.get('/result')
 async def get_result(result: int = 0):
-    cards = {'cards':return_result(cards_file_path, result)}
-    return_dict = [{'emotion': result},cards]
+    title, cards = {'cards':return_result(cards_file_path, result)}
+    return_dict = {'emotion': result,'title':title,'cards':cards}
     return return_dict
