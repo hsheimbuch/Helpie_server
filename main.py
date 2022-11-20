@@ -99,7 +99,7 @@ async def test_api(message: str = Form(...)):
     return {'Hello World': message}
 
 @app.get('/analyze')
-async def get_image(file: str = Form(...)):
+async def get_image(file: str = "https%3A%2F%2Ffirebasestorage.googleapis.com%2Fv0%2Fb%2Fhelpie-fbe77.appspot.com%2Fo%2Fimages%252Fexternal%252Fimages%252Fmedia%252F1000002426.jpg%3Falt%3Dmedia%26token%3D71438dc4-96f9-4f00-a15f-0b21b63814c8"):
     response = requests.get(file)
     image = np.array(Image.open(BytesIO(response.content)))
     face, face_coordinates = detect_face(image,cascade)
